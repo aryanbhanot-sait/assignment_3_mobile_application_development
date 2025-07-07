@@ -11,8 +11,23 @@ export default function Interesting_Facts() {
 
     const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
 
+    function isValidDate(month: string, day: string): boolean {
+        const m = parseInt(month, 10);
+        const d = parseInt(day, 10);
+        if (isNaN(m) || isNaN(d)) return false;
+
+        const date = new Date(2020, m - 1, d); // Use leap year to handle Feb 29
+        return date.getMonth() === m - 1 && date.getDate() === d;
+    }
+
     const handleFetchFact = async () => {
         if (!selectedMonth || !selectedDay || isNaN(Number(selectedDay))) return;
+
+        if (!isValidDate(selectedMonth, selectedDay)) {
+            setFact('Invalid date selected. Please choose a valid day for the selected month.');
+            return;
+        }
+
         setLoading(true);
         const result = await fetchDateFact(selectedMonth, selectedDay);
         setFact(result || '');
@@ -65,9 +80,10 @@ export default function Interesting_Facts() {
                 maxLength={2}
             />
 
-            {loading && <Text style={styles.status}>Loading...</Text>}
-            {!loading && fact !== '' && (
-                <Text style={styles.factText}>{fact}</Text>
+            {!loading && fact && (
+                <Text style={[styles.factText, fact.includes('Invalid') && { color: 'red' }]}>
+                    {fact}
+                </Text>
             )}
         </View>
     );
