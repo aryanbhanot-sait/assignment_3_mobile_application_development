@@ -1,7 +1,7 @@
 export const fetchDateFact = async (month: string, day: string) => {
   if (!month || !day) return null;
 
-  const url = https://numbersapi.p.rapidapi.com/${month}/${day}/date?json=true;
+  const url = `https://numbersapi.p.rapidapi.com/${month}/${day}/date?json=true`;
 
   const options = {
     method: 'GET',
@@ -14,8 +14,8 @@ export const fetchDateFact = async (month: string, day: string) => {
   try {
     const res = await fetch(url, options);
     const data = await res.json();
-    return ${data.text} in ${data.year};
-  } catch (err) {
+    return `${data.text} in ${data.year}`;
+  } catch {
     return 'Could not fetch fact.';
   }
 };
